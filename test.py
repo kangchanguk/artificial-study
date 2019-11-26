@@ -5,6 +5,9 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
 from tensorflow.keras.datasets.cifar10 import load_data
 
+from keras import optimizers
+from keras.preprocessing.image import ImageDataGenerator
+import keras
 import numpy as np
 #from tensorflow.keras import datasets, layers, models
 
@@ -37,13 +40,20 @@ model = Sequential([
     MaxPooling2D(),
     Flatten(),
     Dense(128, activation='relu'),
+    Dropout(0.2),
     Dense(10, activation='softmax')
 ])
+
+datagen = ImageDataGenerator(width_shift_range=0.1, height_shift_range = 0.1, horizontal_flip =True)
+it_train = datagen.flow(train_images,train_labels,batch_size=64)
+
 
 model.compile(optimizer="adam",
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit(train_images, train_labels, epochs=50)
+steps =int(train_images.shape[0]/64)
+model.fit_generator(it_train, steps_per_epoch=steps,epochs=10, validation_data=(test_images,test_labels),verbose=0)
+#model.fit(train_images,train_labels,epochs=10)
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 print(test_acc)
