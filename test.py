@@ -15,7 +15,6 @@ import numpy as np
 #(train_images, train_labels), (test_images, test_labels) = datasets.mnist.load_data()
 (train_images, train_labels), (test_images, test_labels) = load_data()
 
-#이미지 포맷이 흑백에 사이즈 28*28입니다.
 train_images = train_images.reshape((50000, 32, 32, 3))
 
 test_images = test_images.reshape((10000, 32, 32, 3))
@@ -52,6 +51,7 @@ model = Sequential([
     Dropout(0.2),
     Dense(10, activation='softmax')
 ])
+
 datagen = ImageDataGenerator(rotation_range=15,width_shift_range=0.1, height_shift_range = 0.1, horizontal_flip =True)
 datagen.fit(train_images)
 it_train = datagen.flow(train_images,train_labels,64)
