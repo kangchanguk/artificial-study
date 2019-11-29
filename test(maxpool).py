@@ -2,17 +2,17 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os
 import keras
 import tensorflow as tf
-import sys
-from matplotlib import pyplot 
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D, Convolution2D, GlobalAveragePooling2D
 from tensorflow.keras.datasets.cifar10 import load_data
 from keras import optimizers
 from keras.preprocessing.image import ImageDataGenerator
+from matplotlib import pyplot 
 import numpy as np
-#from tensorflow.keras import datasets, layers, models
+import sys
 
-#(train_images, train_labels), (test_images, test_labels) = datasets.mnist.load_data()
+
 def summarize_diagnostics(history):
 	# plot loss
 	pyplot.subplot(211)
@@ -29,6 +29,7 @@ def summarize_diagnostics(history):
 	pyplot.savefig(filename + '_plot.png')
 	pyplot.close()
 
+	
 (train_images, train_labels), (test_images, test_labels) = load_data()
 
 train_images = train_images.reshape((50000, 32, 32, 3))
@@ -38,9 +39,8 @@ test_images = test_images.reshape((10000, 32, 32, 3))
 # 픽셀 값을 0~1 사이로 정규화합니다.
 train_images, test_images = train_images / 255.0, test_images / 255.0
 
-
-if os.path.isfile("cifar-10cnn_model.h11"):
-    model=tf.keras.models.load_model('cifar-10cnn_model.h11')
+if os.path.isfile("cifar-10cnn_model.h10"):
+    model=tf.keras.models.load_model('cifar-10cnn_model.h10')
 
 
 
@@ -48,11 +48,13 @@ else:
     model = Sequential([
         Conv2D(96, 3, padding='same', activation='relu', input_shape=(32, 32 ,3)),
         Conv2D(96, 3, padding='same', activation='relu'),
-        Conv2D(96, 3, strides=2, padding='same'),
+        Conv2D(96, 3, padding='same'),
+        MaxPooling2D(),
         Dropout(0.5),   
         Conv2D(192, 3, padding='same', activation='relu'),
         Conv2D(192, 3, padding='same', activation='relu'),
-        Conv2D(192, 3, strides=2,padding='same'),
+        Conv2D(192, 3, padding='same'),
+        MaxPooling2D(),
         Dropout(0.5),
         Conv2D(192, 3, padding='same', activation='relu'),
         Conv2D(192, 1, padding='valid', activation='relu'),
@@ -71,9 +73,9 @@ model.compile(optimizer=opt,
               metrics=['accuracy'])
 
 
-model.fit_generator(it_train, steps_per_epoch=train_images.shape[0]//32,epochs=350,verbose=1, validation_data=(test_images,test_labels),)
+hist = model.fit_generator(it_train, steps_per_epoch=train_images.shape[0]//32,epochs=350,verbose=1, validation_data=(test_images,test_labels),)
 
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
-
 print(test_acc)
-model.save('cifar-10cnn_model.h11')
+summarize_diagnostics(hist)
+model.save('cifar-10cnn_model.h10')
