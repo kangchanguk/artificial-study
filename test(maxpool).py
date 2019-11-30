@@ -39,8 +39,8 @@ test_images = test_images.reshape((10000, 32, 32, 3))
 # 픽셀 값을 0~1 사이로 정규화합니다.
 train_images, test_images = train_images / 255.0, test_images / 255.0
 
-if os.path.isfile("cifar-10cnn_model.h10"):
-    model=tf.keras.models.load_model('cifar-10cnn_model.h10')
+if os.path.isfile("cifar-10cnn_model.h5"):
+    model=tf.keras.models.load_model('cifar-10cnn_model.h5')
 
 
 
@@ -77,5 +77,6 @@ hist = model.fit_generator(it_train, steps_per_epoch=train_images.shape[0]//32,e
 
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 print(test_acc)
+model.save('cifar-10cnn_model.h5')
 summarize_diagnostics(hist)
-model.save('cifar-10cnn_model.h10')
+

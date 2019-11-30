@@ -39,8 +39,8 @@ test_images = test_images.reshape((10000, 32, 32, 3))
 train_images, test_images = train_images / 255.0, test_images / 255.0
 
 
-if os.path.isfile("cifar-10cnn_model.h11"):
-    model=tf.keras.models.load_model('cifar-10cnn_model.h11')
+if os.path.isfile("cifar-10cnn_model(stride=2).h5"):
+    model=tf.keras.models.load_model('cifar-10cnn_model(stride=2).h5')
 
 
 
@@ -71,9 +71,10 @@ model.compile(optimizer=opt,
               metrics=['accuracy'])
 
 
-model.fit_generator(it_train, steps_per_epoch=train_images.shape[0]//32,epochs=350,verbose=1, validation_data=(test_images,test_labels),)
+hist = model.fit_generator(it_train, steps_per_epoch=train_images.shape[0]//32,epochs=450,verbose=1, validation_data=(test_images,test_labels),)
 
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 
 print(test_acc)
-model.save('cifar-10cnn_model.h11')
+model.save('cifar-10cnn_model(stride=2).h5')
+summarize_diagnostics(hist)
