@@ -28,7 +28,6 @@ def summarize_diagnostics(history):
 	filename = sys.argv[0].split('/')[-1]
 	pyplot.savefig(filename + '_plot.png')
 	pyplot.close()
-
 (train_images, train_labels), (test_images, test_labels) = load_data()
 
 train_images = train_images.reshape((50000, 32, 32, 3))
