@@ -47,7 +47,6 @@ model.compile(optimizer=opt,
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
-
 model.fit_generator(it_train, steps_per_epoch=train_images.shape[0]//64,epochs=150,verbose=1, validation_data=(test_images,test_labels),)
 #model.fit(train_images,train_labels,epochs=50)
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
